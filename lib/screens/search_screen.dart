@@ -27,11 +27,9 @@ class _SearchScreenState extends State<SearchScreen> {
             decoration: InputDecoration(
               suffixIcon: IconButton(
                 onPressed: () async {
-                  final response = await ApiConnector.createSearchMealCards(
+                  mealCards = await ApiConnector.createSearchMealCards(
                       searchFieldController.text);
-                  setState(() {
-                    mealCards = response;
-                  });
+                  setState(() {});
                 },
                 icon: Icon(Icons.search),
               ),
