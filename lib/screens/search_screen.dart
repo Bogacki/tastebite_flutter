@@ -22,6 +22,11 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Column(
         children: [
           TextField(
+            onChanged: (value) async {
+              mealCards = await ApiConnector.createSearchMealCards(
+                  searchFieldController.text);
+              setState(() {});
+            },
             controller: searchFieldController,
             textAlign: TextAlign.left,
             decoration: InputDecoration(
