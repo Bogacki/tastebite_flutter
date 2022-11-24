@@ -8,7 +8,7 @@ class MealDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: TasteBiteAppBar(''),
       body: const Center(
-        child: Text('tests'),
+        child: Text('test'),
       ),
     );
   }
