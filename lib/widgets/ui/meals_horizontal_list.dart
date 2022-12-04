@@ -9,7 +9,7 @@ class MealsHorizontalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> mealCards = [];
-    for (var meal in meals) {
+    for (var meal in meals.take(10)) {
       mealCards.add(
         MealCard(meal: meal),
       );

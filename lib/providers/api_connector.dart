@@ -9,14 +9,13 @@ import '../models/meal.dart';
 import '../widgets/ui/search_meal_card.dart';
 
 abstract class ApiConnector {
-  static Future<List<Meal>> getMealsByCategory(String category) async {
+  static Future<List<Meal>> _fetchMeals(Uri url) async {
     List<Meal> mealsToDisplay = [];
     try {
-      final url = Uri.parse('${Constants.mealUrl}/filter.php?c=$category');
       final response = await http.get(url);
       final decodedDessertsResponse = jsonDecode(response.body);
       final List<dynamic> mealsList = decodedDessertsResponse['meals'];
-      for (var meal in mealsList.take(10)) {
+      for (var meal in mealsList) {
         mealsToDisplay.add(Meal(
           meal['idMeal'],
           meal['strMeal'],
@@ -24,6 +23,46 @@ abstract class ApiConnector {
         ));
       }
       return mealsToDisplay;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<List<Meal>> getMealsByCategory(String category) async {
+    final url = Uri.parse('${Constants.mealUrl}/filter.php?c=$category');
+    try {
+      final List<Meal> meals = await _fetchMeals(url);
+      return meals;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<List<Meal>> getMealsByName(String name) async {
+    final url = Uri.parse('${Constants.mealUrl}/search.php?s=$name');
+    try {
+      final List<Meal> meals = await _fetchMeals(url);
+      return meals;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<List<Meal>> getMealsByArea(String area) async {
+    final url = Uri.parse('${Constants.mealUrl}/filter.php?a=$area');
+    try {
+      final List<Meal> meals = await _fetchMeals(url);
+      return meals;
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<List<Meal>> getMealsByIngredient(String ingredient) async {
+    final url = Uri.parse('${Constants.mealUrl}/filter.php?i=$ingredient');
+    try {
+      final List<Meal> meals = await _fetchMeals(url);
+      return meals;
     } catch (error) {
       rethrow;
     }
@@ -56,29 +95,6 @@ abstract class ApiConnector {
         }
       } while (iteratedIngredient.isNotEmpty);
       return meal;
-    } catch (error) {
-      rethrow;
-    }
-  }
-
-  static Future<List<Meal>> getMealsByName(String name) async {
-    List<Meal> mealsToDisplay = [];
-    try {
-      final url = Uri.parse('${Constants.mealUrl}/search.php?s=$name');
-      final response = await http.get(url);
-      final decodedDessertsResponse = jsonDecode(response.body);
-      final List<dynamic>? mealsList = decodedDessertsResponse['meals'];
-      if (mealsList == null) return [];
-      for (var meal in mealsList.take(10)) {
-        mealsToDisplay.add(
-          Meal(
-            meal['idMeal'],
-            meal['strMeal'],
-            meal['strMealThumb'],
-          ),
-        );
-      }
-      return mealsToDisplay;
     } catch (error) {
       rethrow;
     }
@@ -119,8 +135,21 @@ abstract class ApiConnector {
     }
   }
 
-  static Future<List<Widget>> createSearchMealCards(String search) async {
-    List<Meal> meals = await getMealsByName(search);
+  static Future<List<Widget>> createSearchMealCards(
+      String search, String category) async {
+    List<Meal> meals = [];
+    if (category == 'Meal name') {
+      meals = await getMealsByName(search);
+    }
+    if (category == 'Category') {
+      meals = await getMealsByCategory(search);
+    }
+    if (category == 'Ingredient') {
+      meals = await getMealsByIngredient(search);
+    }
+    if (category == 'Area') {
+      meals = await getMealsByArea(search);
+    }
     List<Widget> mealCards = [];
     for (var meal in meals) {
       mealCards.add(

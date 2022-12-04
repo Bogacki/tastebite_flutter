@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tastebite/models/meal.dart';
+import 'package:tastebite/helpers/colors.dart';
 import 'package:tastebite/providers/api_connector.dart';
 
 import '../widgets/ui/custom_app_bar.dart';
@@ -14,6 +14,8 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchFieldController = TextEditingController();
 
   List<Widget> mealCards = [];
+  static const _searchType = ['Meal name', 'Category', 'Ingredient', 'Area'];
+  String _selectedSearchType = _searchType[0];
 
   @override
   Widget build(BuildContext context) {
@@ -22,24 +24,41 @@ class _SearchScreenState extends State<SearchScreen> {
       body: Column(
         children: [
           TextField(
-            onChanged: (value) async {
-              mealCards = await ApiConnector.createSearchMealCards(
-                  searchFieldController.text);
-              setState(() {});
-            },
             controller: searchFieldController,
             textAlign: TextAlign.left,
             decoration: InputDecoration(
               suffixIcon: IconButton(
                 onPressed: () async {
                   mealCards = await ApiConnector.createSearchMealCards(
-                      searchFieldController.text);
+                      searchFieldController.text, _selectedSearchType);
                   setState(() {});
                 },
                 icon: Icon(Icons.search),
               ),
               contentPadding: EdgeInsets.only(top: 15, left: 20, bottom: 10),
-              hintText: 'Search by Meal/Category/Ingredient',
+              hintText: 'Search by $_selectedSearchType',
+            ),
+          ),
+          SizedBox(
+            height: 60,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _searchType.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ActionChip(
+                    label: Text(_searchType[index]),
+                    backgroundColor: _selectedSearchType == _searchType[index]
+                        ? CustomColors.primaryColor
+                        : Colors.black12,
+                    onPressed: () {
+                      _selectedSearchType = _searchType[index];
+                      setState(() {});
+                    },
+                  ),
+                );
+              },
             ),
           ),
           _isLoading
