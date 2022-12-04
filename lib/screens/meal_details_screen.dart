@@ -29,43 +29,46 @@ class MealDetailsScreen extends StatelessWidget {
           );
           return SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Header(
                   meal: meal,
                   showPopularity: false,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12, top: 12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
+                Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
                         'Ingredients',
                         style: Theme.of(context)
                             .textTheme
                             .headline1
                             ?.copyWith(fontSize: 20),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      IngredientsList(meal: meal),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'Instructions',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline1
-                            ?.copyWith(fontSize: 20),
-                      ),
-                      Container(
-                          margin: const EdgeInsets.symmetric(vertical: 20),
-                          child: Text(meal.instructions!)),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    IngredientsList(meal: meal),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Column(children: [
+                        Text(
+                          'Instructions',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headline1
+                              ?.copyWith(fontSize: 20),
+                        ),
+                        Container(
+                            margin: const EdgeInsets.symmetric(vertical: 20),
+                            child: Text(meal.instructions!)),
+                      ]),
+                    )
+                  ],
                 )
               ],
             ),
