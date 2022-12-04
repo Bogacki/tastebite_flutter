@@ -33,9 +33,10 @@ class _SearchScreenState extends State<SearchScreen> {
                       searchFieldController.text, _selectedSearchType);
                   setState(() {});
                 },
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
               ),
-              contentPadding: EdgeInsets.only(top: 15, left: 20, bottom: 10),
+              contentPadding:
+                  const EdgeInsets.only(top: 15, left: 20, bottom: 10),
               hintText: 'Search by $_selectedSearchType',
             ),
           ),
@@ -62,14 +63,22 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           _isLoading
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Expanded(
-                  child: ListView(
-                    children: mealCards,
+              ? const Expanded(
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
-                ),
+                )
+              : mealCards.isNotEmpty
+                  ? Expanded(
+                      child: ListView(
+                        children: mealCards,
+                      ),
+                    )
+                  : const Expanded(
+                      child: Center(
+                        child: Text('There is no meals to display'),
+                      ),
+                    ),
         ],
       ),
     );

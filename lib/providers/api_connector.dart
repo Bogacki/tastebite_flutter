@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:tastebite/models/ingredient.dart';
 
 import '../helpers/constants.dart';
 import '../models/category.dart';
@@ -14,7 +15,7 @@ abstract class ApiConnector {
     try {
       final response = await http.get(url);
       final decodedDessertsResponse = jsonDecode(response.body);
-      final List<dynamic> mealsList = decodedDessertsResponse['meals'];
+      final List<dynamic> mealsList = decodedDessertsResponse['meals'] ?? [];
       for (var meal in mealsList) {
         mealsToDisplay.add(Meal(
           meal['idMeal'],
@@ -68,17 +69,13 @@ abstract class ApiConnector {
     }
   }
 
-  static Future<Meal> getMealById(String id) async {
+  static Future<Meal> getMealByDetails(Meal meal) async {
     try {
-      final url = Uri.parse('${Constants.mealUrl}/lookup.php?i=$id');
+      final url = Uri.parse('${Constants.mealUrl}/lookup.php?i=${meal.id}');
       final response = await http.get(url);
       final decodedDessertsResponse = jsonDecode(response.body);
       final dynamic extractedMeal = decodedDessertsResponse['meals'][0];
-      final Meal meal = Meal(
-        extractedMeal['idMeal'],
-        extractedMeal['strMeal'],
-        extractedMeal['strMealThumb'],
-      );
+      meal.category = extractedMeal['strCategory'];
       meal.area = extractedMeal['strArea'];
       meal.instructions = extractedMeal['strInstructions'];
       meal.youtube = extractedMeal['strYoutube'];
@@ -90,8 +87,8 @@ abstract class ApiConnector {
         iteratedMeasure = extractedMeal['strMeasure$iterator'];
         iterator++;
         if (iteratedIngredient.isNotEmpty) {
-          meal.ingredients.add(iteratedIngredient);
-          meal.measures.add(iteratedMeasure);
+          meal.ingredients
+              .add(Ingredient(iteratedIngredient, iteratedMeasure, false));
         }
       } while (iteratedIngredient.isNotEmpty);
       return meal;

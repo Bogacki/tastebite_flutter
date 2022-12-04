@@ -1,3 +1,5 @@
+import 'ingredient.dart';
+
 class Meal {
   Meal(this.id, this.name, this.thumb);
   String id;
@@ -7,6 +9,5 @@ class Meal {
   String? area;
   String? instructions;
   String? youtube;
-  List<String> ingredients = [];
-  List<String> measures = [];
+  List<Ingredient> ingredients = [];
 }

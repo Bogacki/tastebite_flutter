@@ -7,7 +7,7 @@ class FavouritesScreen extends StatelessWidget {
     return Scaffold(
       appBar: TasteBiteAppBar('Favourites'),
       body: const Center(
-        child: Text('test'),
+        child: Text('Favourites'),
       ),
     );
   }

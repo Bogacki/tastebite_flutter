@@ -21,7 +21,7 @@ class HomeScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              HeaderSection(),
+              HomePageHeaderSection(),
               DishesSection(
                 title: 'Super Delicious',
                 category: 'Miscellaneous',
